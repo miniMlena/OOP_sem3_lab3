@@ -244,7 +244,8 @@ TEST(GeoCoordinateSetTest, PlusEqualMinusEqual) {
     EXPECT_FALSE(s.contains(GeoCoordinate(1.0, 1.0)));
     EXPECT_TRUE(s.contains(GeoCoordinate(2.0, 2.0)));
 
-    s += GeoCoordinate(3.0, 3.0) += GeoCoordinate(4.0, 4.0);
+    s += GeoCoordinate(3.0, 3.0);
+    s += GeoCoordinate(4.0, 4.0);
     EXPECT_EQ(s.size(), 3u);
 }
 

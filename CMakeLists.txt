@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Lab02_Variant18)
+project(Lab3_Variant14)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -34,19 +34,20 @@ function(apply_sanitizers target)
     endif()
 endfunction()
 
-add_executable(lab2
-    src/main.cpp
-    src/matrix.cpp
+add_executable(lab3
+    src/geo_coordinate.cpp
+    src/geo_set.cpp
 )
 
-target_include_directories(lab2 PRIVATE src)
-apply_sanitizers(lab2)
+target_include_directories(lab3 PRIVATE src)
+apply_sanitizers(lab3)
 
 find_package(GTest REQUIRED)
 
 add_executable(test_variant
     tests/test_variant.cpp
-    src/matrix.cpp
+    src/geo_coordinate.cpp
+    src/geo_set.cpp
 )
 
 target_include_directories(test_variant PRIVATE src)

@@ -11,10 +11,7 @@ GeoCoordinate::GeoCoordinate(const GeoCoordinate& other)
     : latitude_(other.latitude_), longitude_(other.longitude_) {}
 
 GeoCoordinate::GeoCoordinate(GeoCoordinate&& other) noexcept
-    : latitude_(other.latitude_), longitude_(other.longitude_) {
-    other.latitude_ = 0.0;
-    other.longitude_ = 0.0;
-}
+    : latitude_(other.latitude_), longitude_(other.longitude_) {}
 
 GeoCoordinate& GeoCoordinate::operator=(const GeoCoordinate& other) {
     if (this != &other)
@@ -30,8 +27,6 @@ GeoCoordinate& GeoCoordinate::operator=(GeoCoordinate&& other) noexcept {
     {
         latitude_ = other.latitude_;
         longitude_ = other.longitude_;
-        other.latitude_ = 0.0;
-        other.longitude_ = 0.0;
     }
     return *this;
 }

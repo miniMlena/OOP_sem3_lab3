@@ -2,11 +2,8 @@
 #include <ostream>
 #include <utility>
 
-GeoCoordinateSet::GeoCoordinateSet() {
-    data_ = new GeoCoordinate[0];
-    size_ = 0;
-    capacity_ = 0;
-}
+GeoCoordinateSet::GeoCoordinateSet()
+    : data_(new GeoCoordinate[0]), size_(0), capacity_(0) {}
 
 GeoCoordinateSet::~GeoCoordinateSet() {
     delete[] data_;
@@ -17,8 +14,7 @@ GeoCoordinateSet::GeoCoordinateSet(const GeoCoordinateSet& other) {
     capacity_ = other.capacity_;
     data_ = new GeoCoordinate[capacity_];
 
-    for (std::size_t i = 0; i < size_; ++i)
-    {
+    for (std::size_t i = 0; i < size_; ++i) {
         data_[i] = other.data_[i];
     }
 }
@@ -34,19 +30,17 @@ GeoCoordinateSet::GeoCoordinateSet(GeoCoordinateSet&& other) noexcept {
 }
 
 GeoCoordinateSet& GeoCoordinateSet::operator=(const GeoCoordinateSet& other) {
-    if (this != &other)
-    {
-        GeoCoordinateSet copy(other);
-        std::swap(data_, copy.data_);
-        std::swap(size_, copy.size_);
-        std::swap(capacity_, copy.capacity_);
+    if (this != &other) {
+        GeoCoordinateSet tmp(other);
+        std::swap(data_, tmp.data_);
+        std::swap(size_, tmp.size_);
+        std::swap(capacity_, tmp.capacity_);
     }
     return *this;
 }
 
 GeoCoordinateSet& GeoCoordinateSet::operator=(GeoCoordinateSet&& other) noexcept {
-    if (this != &other)
-    {
+    if (this != &other) {
         delete[] data_;
         data_ = other.data_;
         size_ = other.size_;
@@ -66,8 +60,7 @@ bool GeoCoordinateSet::contains(const GeoCoordinate& coord) const {
     std::size_t left = 0;
     std::size_t right = size_;
 
-    while (left < right)
-    {
+    while (left < right) {
         const std::size_t mid = left + (right - left) / 2;
         if (data_[mid] == coord) return true;
         if (data_[mid] < coord) left = mid + 1;
@@ -84,8 +77,7 @@ bool GeoCoordinateSet::add(const GeoCoordinate& coord) {
     if (!coord.is_valid()) return false;
     if (contains(coord)) return false;
 
-    if (size_ == capacity_)
-    {
+    if (size_ == capacity_) {
         const std::size_t new_capacity = capacity_ == 0 ? 1 : capacity_ * 2;
         GeoCoordinate* new_data = new GeoCoordinate[new_capacity];
 
@@ -98,8 +90,7 @@ bool GeoCoordinateSet::add(const GeoCoordinate& coord) {
     }
 
     std::size_t pos = size_;
-    while (pos > 0 && coord < data_[pos - 1])
-    {
+    while (pos > 0 && coord < data_[pos - 1]) {
         data_[pos] = data_[pos - 1];
         --pos;
     }
@@ -112,11 +103,9 @@ bool GeoCoordinateSet::remove(const GeoCoordinate& coord) {
     std::size_t left = 0;
     std::size_t right = size_;
 
-    while (left < right)
-    {
+    while (left < right) {
         const std::size_t mid = left + (right - left) / 2;
-        if (data_[mid] == coord)
-        {
+        if (data_[mid] == coord) {
             for (std::size_t i = mid + 1; i < size_; ++i)
                 data_[i - 1] = data_[i];
             --size_;
@@ -147,14 +136,12 @@ GeoCoordinateSet GeoCoordinateSet::operator|(const GeoCoordinateSet& other) cons
     result.capacity_ = max_capacity;
 
     std::size_t i = 0, j = 0;
-    while (i < size_ && j < other.size_)
-    {
+    while (i < size_ && j < other.size_) {
         if (data_[i] < other.data_[j])
             result.data_[result.size_++] = data_[i++];
         else if (other.data_[j] < data_[i])
             result.data_[result.size_++] = other.data_[j++];
-        else
-        {
+        else {
             result.data_[result.size_++] = data_[i++];
             ++j;
         }
@@ -174,12 +161,10 @@ GeoCoordinateSet GeoCoordinateSet::operator&(const GeoCoordinateSet& other) cons
     result.capacity_ = max_capacity;
 
     std::size_t i = 0, j = 0;
-    while (i < size_ && j < other.size_)
-    {
+    while (i < size_ && j < other.size_) {
         if (data_[i] < other.data_[j]) ++i;
         else if (other.data_[j] < data_[i]) ++j;
-        else
-        {
+        else {
             result.data_[result.size_++] = data_[i++];
             ++j;
         }
@@ -195,14 +180,12 @@ GeoCoordinateSet GeoCoordinateSet::operator-(const GeoCoordinateSet& other) cons
     result.capacity_ = size_;
 
     std::size_t i = 0, j = 0;
-    while (i < size_ && j < other.size_)
-    {
+    while (i < size_ && j < other.size_) {
         if (data_[i] < other.data_[j])
             result.data_[result.size_++] = data_[i++];
         else if (other.data_[j] < data_[i])
             ++j;
-        else
-        {
+        else {
             ++i;
             ++j;
         }
@@ -214,14 +197,12 @@ GeoCoordinateSet GeoCoordinateSet::operator-(const GeoCoordinateSet& other) cons
 
 bool GeoCoordinateSet::operator<=(const GeoCoordinateSet& other) const {
     std::size_t i = 0, j = 0;
-    while (i < size_ && j < other.size_)
-    {
+    while (i < size_ && j < other.size_) {
         if (data_[i] < other.data_[j])
             return false;
         else if (other.data_[j] < data_[i])
             ++j;
-        else
-        {
+        else {
             ++i;
             ++j;
         }
@@ -243,8 +224,7 @@ bool GeoCoordinateSet::operator!=(const GeoCoordinateSet& other) const {
 
 std::ostream& operator<<(std::ostream& out, const GeoCoordinateSet& set) {
     out << '{';
-    for (std::size_t i = 0; i < set.size_; ++i)
-    {
+    for (std::size_t i = 0; i < set.size_; ++i) {
         if (i > 0) out << ',';
         out << ' ' << set.data_[i];
     }

@@ -18,6 +18,6 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const GeoCoordinate& geo_coordinate);
 
 private:
-    double latitude_;   // [-90, 90]
-    double longitude_;  // [-180, 180]
+    double latitude_; // [-90, 90]
+    double longitude_; // [-180, 180]
 };
